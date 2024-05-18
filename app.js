@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const {mongoURL} = require("./utils/keys");
@@ -13,6 +14,7 @@ mongoose.connection.on("error",()=>{
     console.log("Database not connected");
 })
 require("dotenv").config();
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(require("./routes/auth"));

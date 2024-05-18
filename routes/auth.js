@@ -10,7 +10,6 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 router.post("/signup",async(req,res)=>{
     try{
         const {name,email,password} = req.body;
-        console.log(name,email,password);
         if(!name||!email||!password){
             return res.status(422).json({error:"Please Provide all Details"});
         }

@@ -1,34 +1,43 @@
 const express = require("express");
 const router = express.Router();
 const isUserAuthorized = require("../middlewares/isUserAuthorized");
-const cart = require("../models/cartModel");
+const Cart = require("../models/cartModel");
+const Product = require("../models/productsModel");
 
 router.post("/cart", isUserAuthorized, async (req, res) => {
     const { productId, quantity } = req.body;
     const userId = req.user._id;
     try {
-        const existingCart = await cart.findOne({ userId }).populate("products.productId");
-        if (existingCart) {
-            const existingProductIndex = existingCart.products.findIndex(product => product.productId.equals(productId));
-            if (existingProductIndex !== -1) {
-                existingCart.products[existingProductIndex].quantity += parseInt(quantity);
-            }
-            else {
-                existingCart.products.push({ productId, quantity });
-            }
-            await existingCart.save();
-            return res.status(200).json(existingCart);
-        }
-        else {
-            const newCart = new cart({
-                userId,
-                products: [{ productId, quantity }]
-            })
+        const product =await Product.findById(productId);
+        const imageUrl = product.imageUrl;
+        const price = product.price;
 
-            await newCart.save();
-            await newCart.populate('products.productId').execPopulate();
-            return res.status(200).json(newCart);
+        let cart = await Cart.findOne({userId});
+
+        if(!cart){
+            cart = await new Cart({userId,products:[]})
         }
+
+        const productIndex = cart.products.findIndex(p => p.productId.toString() === productId.toString());
+
+        if(productIndex > -1){
+            cart.products[productIndex].quantity += parseInt(quantity);
+            cart.products[productIndex].total = cart.products[productIndex].quantity * price;
+        }else{
+            cart.products.push({
+                userId,
+                productId,
+                price,
+                quantity,
+                total : parseInt(quantity)*price,
+                imageUrl
+            })
+        }
+        cart.total = cart.products.reduce((acc,item)=>acc+item.total,0);
+        cart.totalProducts = cart.products.length;
+        cart.totalQuantity = cart.products.reduce((acc,item)=>acc+item.quantity,0);
+        await cart.save();
+        res.status(200).json({message:"Product added Successfully", cart})
 
     } catch (error) {
         console.error(error);

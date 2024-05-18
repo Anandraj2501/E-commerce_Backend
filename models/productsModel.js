@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./userModel");
 const productSchema = mongoose.Schema({
+    //add details field also...;)
     name:{
         type:String,
         required:true
@@ -22,7 +23,7 @@ const productSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    quantity:{
+    stock:{
         type:Number,
         required:true,
         min: 0 
@@ -30,6 +31,10 @@ const productSchema = mongoose.Schema({
     ratings:{
         type:Number,
         default:0
+    },
+    details:{
+        type: String,
+        required: true
     },
     reviews:[{
         user:{
