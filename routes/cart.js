@@ -44,5 +44,45 @@ router.post("/cart", isUserAuthorized, async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 })
+router.get("/getcart",isUserAuthorized,async(req,res)=>{
+    const userId = req.user._id;
+    try{
+        const cart = await Cart.findOne({userId});
+        if (!cart || cart.products.length === 0) { // Check if cart is empty
+            return res.status(200).json({ message: "Cart is empty", cart: [] });
+        }
+        res.status(200).json({ message: "Success", cart });
+    }catch(error){
+        console.log(error);
+        res.status(500).json({error:"Internal Serveer Error"});
+    }
+})
+
+router.put("/updatecart/:id",isUserAuthorized,async(req,res)=>{
+    const productId = req.params.id;
+    const {quantity} = req.body;
+    console.log(quantity);
+    const userId = req.user._id;
+    try{
+        const cart = await Cart.findOne({userId});
+        if(!cart){
+            return res.status(400).json({error:"Cart not found"});
+        }
+        const productIndex = cart.products.findIndex((p)=>p.productId.toString()===productId.toString());
+        if(productIndex===-1){
+            return res.status(400).json({error:"Product Not Found In Cart"});
+        }
+        cart.products[productIndex].quantity = parseInt(quantity);
+        cart.products[productIndex].total = cart.products[productIndex].quantity * cart.products[productIndex].price;
+        cart.total = cart.products.reduce((acc,item)=>acc+item.total,0);
+        cart.totalProducts = cart.products.length;
+        cart.totalQuantity = cart.products.reduce((acc,item)=>acc+item.quantity,0);
+        await cart.save();
+        return res.status(200).json({message:"Updated",cart});
+    }catch(error){
+        console.log(error);
+        res.status(500).json({error:"Cart Updation Failed"});
+    }
+})
 
 module.exports = router;

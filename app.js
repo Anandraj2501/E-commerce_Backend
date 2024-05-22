@@ -14,7 +14,10 @@ mongoose.connection.on("error",()=>{
     console.log("Database not connected");
 })
 require("dotenv").config();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Replace with your frontend URL
+    credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use(require("./routes/auth"));
@@ -22,6 +25,7 @@ app.use(require("./routes/adminAuth"));
 app.use(require("./routes/addProducts"));
 app.use(require("./routes/getProducts"));
 app.use(require("./routes/cart"));
+app.use(require("./routes/checkOut"));
 
 app.get("/",(req,res)=>{
     res.send("Server is Running");

@@ -4,12 +4,12 @@ const fs = require("fs");
           
 cloudinary.config({ 
   cloud_name: process.env.CLOUD_NAME, 
-  api_key: process.env.CLOUD_API_KEY, 
+  api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
-    
+    console.log(localFilePath);
     try {
         if (!localFilePath) return null
         //upload the file on cloudinary
@@ -18,7 +18,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         })
         // file has been uploaded successfull
         console.log("file is uploaded on cloudinary ", response.url);
-        await fs.unlinkSync(localFilePath)
+        fs.unlinkSync(localFilePath)
         return response.url;
 
     } catch (error) {

@@ -8,8 +8,8 @@ const Product = require("../models/productsModel");
 router.post("/addproducts", isAdminAuthorized, upload.single("image"), async (req, res) => {
     console.log(req.file);
     try {
-        const { name, description, price, category, quantity } = req.body;
-        if (!name || !description || !price || !category || !quantity || !req.file) {
+        const { name, description, price, category, stock,details } = req.body;
+        if (!name || !description || !price || !category || !stock || !details || !req.file) {
             return res.status(400).json({ error: "Please provide all required fields and an image" });
         }
         const imageUrl = await uploadOnCloudinary(req.file.path);
@@ -24,7 +24,8 @@ router.post("/addproducts", isAdminAuthorized, upload.single("image"), async (re
             price,
             category,
             imageUrl,
-            quantity,
+            stock,
+            details,
             ratings: 0, // Initialize ratings to 0
             reviews: [] // Initialize reviews to an empty array
         });
