@@ -54,16 +54,15 @@ router.post("/checkout", isUserAuthorized, async (req, res) => {
         await cart.save();
         res.status(200).json({ order });
     } catch (error) {
-        console.log(error);
+        console.log("Checkout error",error.message);
         res.status(500).json({ error: "Internal server error" });
     }
 
 })
 
 router.post("/paymentverification", async (req, res) => {
-    
+    const {razorpay_payment_id,razorpay_order_id,razorpay_signature} = req.body;
     try {
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.query;
 
         const secret = process.env.RAZORPAY_SECRET_KEY;
 
