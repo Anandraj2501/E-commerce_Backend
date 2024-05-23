@@ -15,7 +15,7 @@ mongoose.connection.on("error",()=>{
 })
 require("dotenv").config();
 app.use(cors({
-    origin: 'https://e-commerce-backend-t4lj.onrender.com', // Replace with your frontend URL
+    origin: 'http://localhost:3000', // Replace with your frontend URL
     credentials: true,
 }));
 app.use(express.json());
