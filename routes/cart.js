@@ -46,6 +46,7 @@ router.post("/cart", isUserAuthorized, async (req, res) => {
 })
 router.get("/getcart",isUserAuthorized,async(req,res)=>{
     const userId = req.user._id;
+    console.log(userId);
     try{
         const cart = await Cart.findOne({userId});
         if (!cart || cart.products.length === 0) { // Check if cart is empty
