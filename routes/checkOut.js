@@ -16,6 +16,7 @@ router.post("/checkout", isUserAuthorized, async (req, res) => {
     const amount = req.body.total;
     const cartId = req.body.cartId;
     const userId = req.user._id;
+    console.log(amount,cartId,userId);
     try {
         var options = {
             amount: Number(amount * 100),  // amount in the smallest currency unit
