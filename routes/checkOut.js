@@ -56,7 +56,7 @@ router.post("/checkout", isUserAuthorized, async (req, res) => {
         await cart.save();
         res.status(200).json({ order });
     } catch (error) {
-        console.log("Checkout error",error.message);
+        console.log("Checkout error",error);
         res.status(500).json({ error: "Internal server error" });
     }
 
