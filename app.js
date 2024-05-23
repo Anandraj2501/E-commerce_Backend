@@ -15,7 +15,7 @@ mongoose.connection.on("error",()=>{
 })
 require("dotenv").config();
 app.use(cors({
-    origin: 'http://localhost:3000', // Replace with your frontend URL
+    origin: 'https://devshop2.netlify.app/', // Replace with your frontend URL
     credentials: true,
 }));
 app.use(express.json());
