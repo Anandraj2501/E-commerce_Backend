@@ -24,7 +24,7 @@ router.post("/checkout", isUserAuthorized, async (req, res) => {
             receipt: "order_rcptid_11"
         };
         const order = await instance.orders.create(options);
-
+        console.log(order);
         const user = await User.findOne(userId);
         console.log(user);
         if (!user) {
