@@ -24,16 +24,16 @@ router.post("/checkout", isUserAuthorized, async (req, res) => {
             receipt: "order_rcptid_11"
         };
         const order = await instance.orders.create(options);
-        console.log(order);
+        
         const user = await User.findOne(userId);
-        console.log(user);
+        
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         // Find the user's cart
         const cart = await Cart.findById(cartId);
-        console.log(cart);
+        
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });
         }
