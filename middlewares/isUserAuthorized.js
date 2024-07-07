@@ -3,9 +3,10 @@ const { Jwt_Secret } = require("../utils/keys");
 const jwt = require("jsonwebtoken");
 
 const isUserAuthorized = async (req, res, next) => {
-    console.log(req.cookies);
+    console.log(req.headers);
     try {
-        const token = req.cookies.token;
+        const token = req.headers.authorization.replace("bearer ","");
+        console.log(token);
         
         if (!token) {
             return res.status(401).json({ error: "Unauthorized, Token Not Found" });

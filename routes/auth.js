@@ -4,6 +4,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {Jwt_Secret} = require("../utils/keys");
+const isUserAuthorized = require("../middlewares/isUserAuthorized");
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -52,13 +53,14 @@ router.post("/signin",async(req,res)=>{
             return res.status(401).json({error:"Invalid Password"});
         }
         const token = jwt.sign({userId:user._id},Jwt_Secret,{expiresIn:"7d"});
-        res.cookie('token', token, { httpOnly: true,secure: true,sameSite: 'None', expiresIn: 604800000 });
-        res.status(200).json({message:"Sign In Successfully",user: { _id: user._id,profilepic:user.profilepic, name: user.name }});
+        res.status(200).json({message:"Sign In Successfully",user: { _id: user._id,profilepic:user.profilepic, name: user.name,token:token }});
 
     }catch(error){
         res.status(500).json({error:"Internal Server Error"});
     }
 })
+
+
 
 router.get("/user/:id",async(req,res)=>{
     try{
